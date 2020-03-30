@@ -8,8 +8,9 @@ class LoadablePlugin {
     path,
     writeToDisk,
     outputAsset = true,
+    jsonpFunction,
   } = {}) {
-    this.opts = { filename, writeToDisk, outputAsset, path }
+    this.opts = { filename, writeToDisk, outputAsset, path, jsonpFunction }
 
     // The Webpack compiler instance
     this.compiler = null
@@ -73,7 +74,7 @@ class LoadablePlugin {
     this.compiler = compiler
 
     // Add a custom output.jsonpFunction: __LOADABLE_LOADED_CHUNKS__
-    compiler.options.output.jsonpFunction = '__LOADABLE_LOADED_CHUNKS__'
+    compiler.options.output.jsonpFunction = this.opts.jsonpFunction || '__LOADABLE_LOADED_CHUNKS__'
 
     if (this.opts.outputAsset || this.opts.writeToDisk) {
       compiler.hooks.emit.tapAsync('@loadable/webpack-plugin', this.handleEmit)
